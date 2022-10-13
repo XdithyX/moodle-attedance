@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 from login_values import *
 
 login_data = {
-    'anchor' : '',
+    'anchor' : '',                                 #initialising data
     'username' : username,
     'password' : password
 }
@@ -15,7 +15,7 @@ res = s.get('https://' + domain + '/login/index.php')
 soup = BeautifulSoup(res.content, 'html5lib')
 login_data['logintoken'] = soup.find('input', attrs={'name': 'logintoken'})['value']
 res = s.post('https://' + domain + '/login/index.php', data=login_data)
-if res.status_code==200:
+if res.status_code==200:                               #if successfull
     print("login successful :)\n")
     subs_list = []
     while(True):
@@ -24,7 +24,7 @@ if res.status_code==200:
         soup = BeautifulSoup(res.content, 'html5lib')
         l = soup.find_all('div', attrs={'data-type':'event'})
         count=0
-        new_sub_list = []
+        new_sub_list = []                                                               #intialising variables
         data=[]
         for i in l:
             i = str(i)
@@ -32,8 +32,8 @@ if res.status_code==200:
             sub = {}
             link = x.find('a',attrs={'class':'card-link'})['href']
             if link.startswith('https://' + domain + '/mod/attendance/view.php?id='):
-                sub['link'] = link
-                new_sub_list.append(link)
+                sub['link'] = link                                                            
+                new_sub_list.append(link)                                                       #appending values
                 for j in x.find_all('a'):
                     if j['href'].startswith('https://' + domain + '/course/view.php?id='):
                         sub['name'] = j.text
@@ -47,7 +47,7 @@ if res.status_code==200:
 
         # printing available attendances
         if subs_list!=new_sub_list or subs_list==[]:
-            print("\n#####   Today's Attendances    #####\n")
+            print("\n#####   Today's Attendances    #####\n")                                      #todays attendence
             for i in data:
                 if len(i['name'])>35:
                     print(i['name'][:33]+'..','\t', i['time'])
